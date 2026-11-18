@@ -9,6 +9,7 @@ from sklearn.metrics import (
 )
 
 from src.preprocessing import UNKNOWN_WORD
+from src.neural_data import NeuralBatch
 
 
 def flatten_sequences(sequences: list[list[str]]) -> list[str]:
@@ -75,3 +76,46 @@ def evaluate_predictions(
             labels=labels,
         ),
     }
+
+
+# Phase 2: Evaluate padded neural batches after removing padding positions.
+def evaluate_neural_batches(
+    model,
+    batches: list[NeuralBatch],
+    tag_mapping: tuple[str, ...],
+    training_vocabulary: set[str] | frozenset[str],
+) -> tuple[dict, list[list[str]]]:
+    """Evaluate padded neural batches using only real-token positions."""
+    if not batches:
+        raise ValueError("Cannot evaluate an empty batch collection")
+
+    gold_sequences = []
+    predicted_sequences = []
+    word_sequences = []
+
+    for batch in batches:
+        predictions = model.predict_batch(batch)
+        if len(predictions) != len(batch.original_words):
+            raise ValueError("Model returned the wrong number of sentences")
+
+        for sentence_index, sentence_words in enumerate(batch.original_words):
+            sentence_length = int(batch.sentence_lengths[sentence_index].item())
+            gold_tag_ids = batch.tag_ids[sentence_index, :sentence_length].tolist()
+            gold_tags = [tag_mapping[tag_id] for tag_id in gold_tag_ids]
+            predicted_tags = predictions[sentence_index]
+            if len(predicted_tags) != sentence_length:
+                raise ValueError("Model returned a wrong sentence length")
+            gold_sequences.append(gold_tags)
+            predicted_sequences.append(predicted_tags)
+            word_sequences.append(list(sentence_words))
+
+    return (
+        evaluate_predictions(
+            gold_sequences=gold_sequences,
+            predicted_sequences=predicted_sequences,
+            word_sequences=word_sequences,
+            training_vocabulary=training_vocabulary,
+            labels=list(tag_mapping[1:]),
+        ),
+        predicted_sequences,
+    )
