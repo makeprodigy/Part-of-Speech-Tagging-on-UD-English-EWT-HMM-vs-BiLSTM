@@ -26,7 +26,6 @@ This repository implements:
 - **Team ID**: **T058** | **Section**: **A**
 - **Degree Program**: **B. Tech in Computer Science & Artificial Intelligence**
 - **Institution**: Newton School of Technology, Rishihood University
-- **Repository**: [https://github.com/r0hansng/aml-project](https://github.com/r0hansng/aml-project)
 
 | # | Enrollment Number | Full Name | Institutional Email | Git Author / Handle | Primary Contributions & Core Modules |
 | :-: | :---: | :--- | :--- | :--- | :--- |
