@@ -5,7 +5,6 @@ import torch
 
 from src.crf_layer import LinearChainCRF
 
-
 class TestLinearChainCRF(unittest.TestCase):
     def setUp(self):
         self.crf = LinearChainCRF(tag_count=3, padding_tag_id=0)
