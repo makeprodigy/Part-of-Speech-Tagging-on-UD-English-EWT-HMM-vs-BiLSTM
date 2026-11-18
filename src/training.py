@@ -5,12 +5,16 @@ import random
 from dataclasses import asdict, dataclass
 from typing import Iterable
 
+# pyrefly: ignore[missing-import]
 import numpy as np
+# pyrefly: ignore[missing-import]
 import torch
 from sklearn.metrics import f1_score
+# pyrefly: ignore[missing-import]
 from torch import nn
 from tqdm.auto import tqdm
 
+# pyrefly: ignore[missing-import]
 from src.bilstm_model import WordBiLSTMTagger
 from src.neural_data import NeuralBatch
 
